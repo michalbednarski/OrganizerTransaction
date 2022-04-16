@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">OrganizerTransaction</string>
+    <string name="hello_world_1">
+        Since activities launched inside task fragment are only allowed when
+        <tt>com.android.server.wm.Task#effectiveUid</tt> matches one of launched activity or
+        is system uid, we\'ll need to be in task whose effectiveUid, in order to be able
+        to launch arbitrary activities inside our TaskFragment.
+        \nThat is checked in <tt>com.android.server.wm.ActivityStarter#canEmbedActivity</tt>
+
+        \n\nYet, in order to create <tt>TaskFragment</tt>, uid of root <tt>ActivityRecord</tt> within <tt>Task</tt>
+        must be equal to one of <tt>ActivityRecord</tt> creating <tt>TaskFragment</tt>
+        \nThat is checked in <tt>com.android.server.wm.WindowOrganizerController#createTaskFragment</tt>
+
+        \n\nThis is first step when we\'ll create <tt>Task</tt> that fulfills these conditions and
+        in the end only contains <tt>SecondActivity</tt> from this app.
+    </string>
+    <string name="hello_world_2">
+        Now that we\'re in task that has <tt>effectiveUid=system</tt> and <tt>getRootTask().getUid</tt> of this app
+        we can start launching activities and getting their <tt>SurfaceControl</tt>-s
+
+        \n\nIn list below you can choose \"System settings\" to launch system settings
+        and use \"Zoom and set alpha\" option to make settings application translucent and scaled.
+        This is for demonstration of possible tap-jacking.
+
+        \n\nThe second option (\"Shutdown\") will <tt>startActivity com.android.internal.app.ShutdownActivity</tt>,
+        which normally requires signature permission <tt>android.permission.SHUTDOWN</tt>,
+        but since activity start is actually happening under <tt>Binder.clearCallingIdentity()</tt>,
+        it is allowed. This demonstrates ability to launch activities regardless of permissions
+        and exported state.
+    </string>
+    <string name="zoom_and_set_alpha">Zoom and set alpha</string>
+    <string-array name="destinations">
+        <item>System settings</item>
+        <item>Shutdown</item>
+    </string-array>
+    <string name="button_text">Go</string>
+</resources>
